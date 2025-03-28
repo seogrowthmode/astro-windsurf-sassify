@@ -1,10 +1,10 @@
 ---
 ---
-<section class="relative pt-32 pb-20 md:pt-40 overflow-hidden hero-section">
+<section class="relative pt-32 pb-20 md:pt-40 overflow-hidden hero-section" transition:animate="none">
   <div class="container-custom relative z-10">
     <div class="grid md:grid-cols-2 gap-12 items-center">
-      <div class="slide-up" transition:animate="slide">
-        <h1 class="mb-6 text-secondary-900 dark:text-white leading-tight">
+      <div class="slide-up" transition:animate="none">
+        <h1 class="mb-6 text-secondary-900 dark:text-white leading-tight" style="content-visibility: auto;">
           <span class="text-primary-600 dark:text-primary-400">AI-Powered</span> SEO Platform<br>
           for modern businesses.
         </h1>
@@ -263,5 +263,15 @@
   /* Apply floating animation to the entire SVG container */
   .fade-in svg {
     animation: float 6s ease-in-out infinite;
+  }
+  
+  /* Optimize LCP by ensuring the hero heading is visible immediately */
+  .hero-section h1 {
+    content-visibility: auto;
+  }
+  
+  /* Remove animation delay for the hero heading */
+  .slide-up {
+    animation: none !important;
   }
 </style>

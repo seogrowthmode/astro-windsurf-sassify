@@ -1,6 +1,5 @@
 ---
-import '../styles/global.css';
-import '../styles/transitions.css';
+import '../styles/critical.css';
 import { ViewTransitions } from 'astro:transitions';
 
 export interface Props {
@@ -23,16 +22,33 @@ const {
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
     <title>{title}</title>
+    
+    <!-- Preload critical assets -->
+    <link rel="preload" as="style" href="/styles/critical.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Preload critical fonts -->
+    <link rel="preload" as="font" type="font/woff2" href="https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2" crossorigin>
+    <link rel="preload" as="font" type="font/woff2" href="https://fonts.gstatic.com/s/lexend/v17/wlpwgwvFAVdoq2_v9KQU4Wc.woff2" crossorigin>
+    
+    <!-- Async load non-critical CSS -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lexend:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lexend:wght@400;500;600;700&display=swap"></noscript>
+    
+    <!-- Load non-critical styles after page load -->
+    <link rel="stylesheet" href="../styles/global.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="../styles/transitions.css" media="print" onload="this.media='all'">
+    
     <ViewTransitions />
   </head>
   <body class="antialiased bg-white dark:bg-secondary-950 text-secondary-900 dark:text-secondary-100 transition-colors duration-300">
     <div id="page-wrapper" class="page-transition-wrapper">
       <slot />
     </div>
-    <script>
+    
+    <!-- Inline critical JavaScript -->
+    <script is:inline>
       // Check for user preference
       if (localStorage.getItem('darkMode') === null) {
         // Check system preference
@@ -43,8 +59,25 @@ const {
           localStorage.setItem('darkMode', 'false');
         }
       }
-
-      // Handle page transitions
+      
+      // Preload remaining styles
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          const globalStyles = document.createElement('link');
+          globalStyles.rel = 'stylesheet';
+          globalStyles.href = '../styles/global.css';
+          document.head.appendChild(globalStyles);
+          
+          const transitionStyles = document.createElement('link');
+          transitionStyles.rel = 'stylesheet';
+          transitionStyles.href = '../styles/transitions.css';
+          document.head.appendChild(transitionStyles);
+        }, 100);
+      });
+    </script>
+    
+    <!-- Handle page transitions -->
+    <script defer>
       document.addEventListener('astro:page-load', () => {
         // This runs on initial page load and after each navigation
         const pageWrapper = document.getElementById('page-wrapper');
@@ -61,6 +94,8 @@ const {
         }
       });
     </script>
-    <script src="../scripts/transitions.js"></script>
+    
+    <!-- Load non-critical scripts -->
+    <script defer src="../scripts/transitions.js"></script>
   </body>
 </html>

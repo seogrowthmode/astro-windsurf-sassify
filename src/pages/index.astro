@@ -6,9 +6,13 @@ import Features from '../components/Features.astro';
 import Testimonials from '../components/Testimonials.astro';
 import Newsletter from '../components/Newsletter.astro';
 import Footer from '../components/Footer.astro';
+
+// SEO metadata
+const title = "Chadix - AI-Powered SEO Platform";
+const description = "Boost your search rankings with Chadix, the intelligent AI SEO platform designed to maximize your online visibility and drive organic traffic.";
 ---
 
-<Layout title="Sassify - Your Ultimate SasS Template">
+<Layout title={title} description={description}>
   <Header />
   <main>
     <Hero />
@@ -18,3 +22,14 @@ import Footer from '../components/Footer.astro';
   </main>
   <Footer />
 </Layout>
+
+<script>
+  // Optimize LCP by prioritizing hero section rendering
+  document.addEventListener('DOMContentLoaded', () => {
+    // Add priority hints to LCP elements
+    const heroHeading = document.querySelector('.hero-section h1');
+    if (heroHeading) {
+      heroHeading.setAttribute('fetchpriority', 'high');
+    }
+  });
+</script>
