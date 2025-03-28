@@ -1,4 +1,6 @@
 ---
+import '../styles/global.css';
+import '../styles/transitions.css';
 import '../styles/critical.css';
 import { ViewTransitions } from 'astro:transitions';
 
@@ -23,22 +25,21 @@ const {
     <meta name="description" content={description} />
     <title>{title}</title>
     
-    <!-- Preload critical assets -->
-    <link rel="preload" as="style" href="/styles/critical.css">
+    <!-- Preload fonts to improve performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lexend:wght@400;500;600;700&display=swap" as="style">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Preload critical fonts -->
-    <link rel="preload" as="font" type="font/woff2" href="https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2" crossorigin>
-    <link rel="preload" as="font" type="font/woff2" href="https://fonts.gstatic.com/s/lexend/v17/wlpwgwvFAVdoq2_v9KQU4Wc.woff2" crossorigin>
-    
-    <!-- Async load non-critical CSS -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lexend:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lexend:wght@400;500;600;700&display=swap"></noscript>
-    
-    <!-- Load non-critical styles after page load -->
-    <link rel="stylesheet" href="../styles/global.css" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="../styles/transitions.css" media="print" onload="this.media='all'">
+    <!-- Inline critical styles for LCP -->
+    <style>
+      /* Critical styles for LCP element */
+      .hero-section h1 {
+        opacity: 1 !important;
+        transform: translateY(0) !important;
+        transition: none !important;
+      }
+    </style>
     
     <ViewTransitions />
   </head>
@@ -47,8 +48,7 @@ const {
       <slot />
     </div>
     
-    <!-- Inline critical JavaScript -->
-    <script is:inline>
+    <script>
       // Check for user preference
       if (localStorage.getItem('darkMode') === null) {
         // Check system preference
@@ -59,25 +59,8 @@ const {
           localStorage.setItem('darkMode', 'false');
         }
       }
-      
-      // Preload remaining styles
-      window.addEventListener('load', function() {
-        setTimeout(function() {
-          const globalStyles = document.createElement('link');
-          globalStyles.rel = 'stylesheet';
-          globalStyles.href = '../styles/global.css';
-          document.head.appendChild(globalStyles);
-          
-          const transitionStyles = document.createElement('link');
-          transitionStyles.rel = 'stylesheet';
-          transitionStyles.href = '../styles/transitions.css';
-          document.head.appendChild(transitionStyles);
-        }, 100);
-      });
-    </script>
-    
-    <!-- Handle page transitions -->
-    <script defer>
+
+      // Handle page transitions
       document.addEventListener('astro:page-load', () => {
         // This runs on initial page load and after each navigation
         const pageWrapper = document.getElementById('page-wrapper');
@@ -94,8 +77,6 @@ const {
         }
       });
     </script>
-    
-    <!-- Load non-critical scripts -->
     <script defer src="../scripts/transitions.js"></script>
   </body>
 </html>

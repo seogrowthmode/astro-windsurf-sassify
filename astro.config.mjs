@@ -6,10 +6,7 @@ import alpinejs from '@astrojs/alpinejs';
 // https://astro.build/config
 export default defineConfig({
   integrations: [
-    tailwind({
-      // Optimize CSS delivery
-      applyBaseStyles: false,
-    }),
+    tailwind(),
     alpinejs()
   ],
   vite: {
@@ -22,10 +19,6 @@ export default defineConfig({
     // Optimize CSS processing
     css: {
       devSourcemap: false,
-    },
-    // Optimize asset loading
-    optimizeDeps: {
-      exclude: ['@fontsource/inter', '@fontsource/lexend'],
     },
   }
 });
