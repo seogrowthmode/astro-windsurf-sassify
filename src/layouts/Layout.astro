@@ -25,15 +25,51 @@ const {
     <meta name="description" content={description} />
     <title>{title}</title>
     
-    <!-- Preload fonts to improve performance -->
+    <!-- Preconnect to font domains -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lexend:wght@400;500;600;700&display=swap" as="style">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Inline critical styles for LCP -->
-    <style>
-      /* Critical styles for LCP element */
+    <!-- Preload critical fonts with font-display: swap -->
+    <link rel="preload" href="https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/lexend/v17/wlpwgwvFAVdoq2_v9KQU4Wc.woff2" as="font" type="font/woff2" crossorigin>
+    
+    <!-- Asynchronously load the full font stylesheet -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lexend:wght@400;500;600;700&display=swap">
+    
+    <!-- Inline critical CSS -->
+    <style is:inline>
+      /* Critical font definitions */
+      @font-face {
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 400;
+        font-display: swap;
+        src: url(https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2) format('woff2');
+      }
+      
+      @font-face {
+        font-family: 'Lexend';
+        font-style: normal;
+        font-weight: 700;
+        font-display: swap;
+        src: url(https://fonts.gstatic.com/s/lexend/v17/wlpwgwvFAVdoq2_v9KQU4Wc.woff2) format('woff2');
+      }
+      
+      /* Critical layout styles */
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Inter', sans-serif;
+        -webkit-text-size-adjust: 100%;
+        -webkit-font-smoothing: antialiased;
+      }
+      
+      h1, h2, h3, h4, h5, h6 {
+        font-family: 'Lexend', sans-serif;
+        margin: 0 0 1rem;
+      }
+      
+      /* Ensure text is visible while fonts are loading */
       .hero-section h1 {
         opacity: 1 !important;
         transform: translateY(0) !important;
@@ -48,7 +84,8 @@ const {
       <slot />
     </div>
     
-    <script>
+    <!-- Inline critical JavaScript -->
+    <script is:inline>
       // Check for user preference
       if (localStorage.getItem('darkMode') === null) {
         // Check system preference
@@ -59,8 +96,18 @@ const {
           localStorage.setItem('darkMode', 'false');
         }
       }
-
-      // Handle page transitions
+      
+      // Add priority hints to LCP elements
+      document.addEventListener('DOMContentLoaded', function() {
+        const heroHeading = document.querySelector('.hero-section h1');
+        if (heroHeading) {
+          heroHeading.setAttribute('fetchpriority', 'high');
+        }
+      });
+    </script>
+    
+    <!-- Handle page transitions -->
+    <script defer>
       document.addEventListener('astro:page-load', () => {
         // This runs on initial page load and after each navigation
         const pageWrapper = document.getElementById('page-wrapper');
@@ -77,6 +124,8 @@ const {
         }
       });
     </script>
+    
+    <!-- Defer non-critical JavaScript -->
     <script defer src="../scripts/transitions.js"></script>
   </body>
 </html>

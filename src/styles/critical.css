@@ -87,7 +87,62 @@ h1, h2, h3, h4, h5, h6 {
   transition: background-color 0.2s;
 }
 
-/* Disable animations for LCP elements */
+/* Critical grid styles */
+.grid {
+  display: grid;
+}
+
+@media (min-width: 768px) {
+  .md\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.gap-12 {
+  gap: 3rem;
+}
+
+.items-center {
+  align-items: center;
+}
+
+/* Critical text styles */
+.text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
+.text-secondary-600 {
+  color: #475569;
+}
+
+.dark .dark\:text-secondary-300 {
+  color: #cbd5e1;
+}
+
+.mb-8 {
+  margin-bottom: 2rem;
+}
+
+.max-w-lg {
+  max-width: 32rem;
+}
+
+/* Critical flex styles */
+.flex {
+  display: flex;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.gap-4 {
+  gap: 1rem;
+}
+
+/* Prevent animation flicker */
 .slide-up {
-  animation: none !important;
+  opacity: 1;
+  transform: translateY(0);
 }
